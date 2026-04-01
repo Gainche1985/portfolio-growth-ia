@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Stratégique & Opérationnel | Marie</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Application Structure Plan: [Le portfolio est conçu comme un tableau de bord exécutif (Executive Dashboard). Plutôt que de simplement lister des documents, il scénarise les compétences de Marie en 4 piliers thématiques (Growth, IA, SEO/UX, Outils Interactifs). Chaque section utilise des données réelles issues des livrables (ex: données Clarity, métriques de l'Agent IA) pour prouver l'impact direct. Des filtres interactifs et des graphiques dynamiques invitent le recruteur à explorer activement les accomplissements, démontrant ainsi la double compétence stratégique et technique.] -->
+    
+    <!-- Visualization & Content Choices: [1. KPIs globaux (HTML/CSS) pour une vue d'ensemble immédiate. 2. Section IA : Graphique en barres (Chart.js) pour comparer l'avant/après l'utilisation de l'agent IA (démontre le gain de temps et l'engagement). 3. Section Growth : Liste interactive filtrable (JS + HTML) des idées Growth pour montrer la structuration de la pensée. 4. Section SEO/UX : Graphique en anneau (Chart.js) basé sur l'audit Clarity pour illustrer l'approche Data-Driven. Aucune image SVG ou librairie Mermaid n'est utilisée, respectant strictement les contraintes.] -->
+    
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    
+    <!-- Chosen Palette: [Warm Neutrals & Executive Teal - bg-stone-50 pour un fond doux et lisible, texte text-stone-800, accents text-teal-600 et bg-teal-600 pour guider l'action et donner un aspect professionnel, touches de orange/ambre pour les données saillantes.] -->
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            500: '#14b8a6',
+                            600: '#0d9488',
+                            900: '#134e4a',
+                        },
+                        accent: '#f59e0b'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Essential Chart Container Styling */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        
+        /* Smooth scrolling and basic resets */
+        html { scroll-behavior: smooth; }
+        body { -webkit-font-smoothing: antialiased; }
+        
+        /* Custom scrollbar for interactive lists */
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f5f5f4; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #d6d3d1; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #a8a29e; }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800 font-sans leading-relaxed">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full bg-white/90 backdrop-blur-md border-b border-stone-200 z-50 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex-shrink-0 font-bold text-xl tracking-tight text-brand-900">
+                    🚀 Portfolio <span class="text-brand-600">Growth & IA</span>
+                </div>
+                <div class="hidden md:flex space-x-8 text-sm font-medium text-stone-600">
+                    <a href="#vision" class="hover:text-brand-600 transition">Vision</a>
+                    <a href="#growth" class="hover:text-brand-600 transition">Stratégie Growth</a>
+                    <a href="#ia" class="hover:text-brand-600 transition">Projets IA</a>
+                    <a href="#ux" class="hover:text-brand-600 transition">Data & UX</a>
+                </div>
+                <div>
+                    <a href="#contact" class="bg-brand-600 hover:bg-brand-500 text-white px-4 py-2 rounded-lg font-medium transition shadow-sm">
+                        Me Contacter
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header id="vision" class="pt-32 pb-20 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
+        <div class="text-center max-w-3xl mx-auto">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-stone-900 tracking-tight mb-6">
+                Transformer la donnée en croissance et l'IA en <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-600 to-teal-400">productivité réelle.</span>
+            </h1>
+            <p class="text-lg md:text-xl text-stone-600 mb-10">
+                Profil hybride expert en Growth, IA & Produit. Capacité prouvée à auditer des comportements, concevoir des stratégies d'acquisition et déployer des solutions techniques (Agents IA, automatisation) pour générer du ROI.
+            </p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="#ia" class="bg-stone-900 hover:bg-stone-800 text-white px-6 py-3 rounded-lg font-medium transition shadow-md">
+                    📊 Découvrir mes cas d'usage
+                </a>
+                <a href="#contact" class="bg-white border-2 border-stone-200 hover:border-brand-600 hover:text-brand-600 text-stone-700 px-6 py-3 rounded-lg font-medium transition">
+                    🤝 Voir mes recommandations
+                </a>
+            </div>
+        </div>
+
+        <!-- Executive KPI Bar -->
+        <div class="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-stone-100">
+                <div class="text-3xl mb-2">🤖</div>
+                <div class="text-2xl font-bold text-brand-600">+70%</div>
+                <div class="text-sm text-stone-500 font-medium uppercase tracking-wide mt-1">Temps gagné via IA</div>
+            </div>
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-stone-100">
+                <div class="text-3xl mb-2">📈</div>
+                <div class="text-2xl font-bold text-brand-600">18</div>
+                <div class="text-sm text-stone-500 font-medium uppercase tracking-wide mt-1">Leviers Growth activés</div>
+            </div>
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-stone-100">
+                <div class="text-3xl mb-2">🔍</div>
+                <div class="text-2xl font-bold text-brand-600">20k+</div>
+                <div class="text-sm text-stone-500 font-medium uppercase tracking-wide mt-1">Sessions UX auditées</div>
+            </div>
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-stone-100">
+                <div class="text-3xl mb-2">⚡</div>
+                <div class="text-2xl font-bold text-brand-600">100%</div>
+                <div class="text-sm text-stone-500 font-medium uppercase tracking-wide mt-1">Cohérence de marque</div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-24 pb-24">
+
+        <!-- SECTION 1: GROWTH -->
+        <section id="growth" class="scroll-mt-24">
+            <div class="mb-10">
+                <h2 class="text-3xl font-bold text-stone-900 mb-4">1. Stratégie Growth & Acquisition</h2>
+                <p class="text-stone-600 text-lg max-w-3xl">
+                    <strong>Objectif :</strong> Démontrer ma capacité à projeter la croissance à travers des leviers actionnables. Cette section présente un extrait interactif de mon plan de bataille "18 idées Growth 2025" (HubSpot, Automatisation, Nurturing). Explorez les différentes tactiques en filtrant par catégorie.
+                </p>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-sm border border-stone-200 overflow-hidden">
+                <div class="p-6 md:p-8 bg-stone-100/50 border-b border-stone-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div>
+                        <h3 class="text-xl font-bold text-stone-900">Roadmap Growth 2025 (Extrait)</h3>
+                        <p class="text-sm text-stone-500 mt-1">Basé sur l'audit Clarity et les besoins de scalabilité B2B.</p>
+                    </div>
+                    <!-- Interactive Filters -->
+                    <div class="flex space-x-2">
+                        <button onclick="filterGrowth('all')" class="filter-btn active bg-brand-600 text-white px-3 py-1.5 rounded-md text-sm font-medium transition" data-filter="all">Toutes</button>
+                        <button onclick="filterGrowth('acquisition')" class="filter-btn bg-white border border-stone-300 text-stone-600 hover:bg-stone-50 px-3 py-1.5 rounded-md text-sm font-medium transition" data-filter="acquisition">Acquisition</button>
+                        <button onclick="filterGrowth('upsell')" class="filter-btn bg-white border border-stone-300 text-stone-600 hover:bg-stone-50 px-3 py-1.5 rounded-md text-sm font-medium transition" data-filter="upsell">Upsell / Nurturing</button>
+                    </div>
+                </div>
+                
+                <div class="p-6">
+                    <div id="growth-list" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Populated by JS -->
+                    </div>
+                    <div class="mt-8 p-4 bg-brand-50 rounded-lg border border-brand-100 flex items-start gap-4">
+                        <div class="text-2xl">💡</div>
+                        <div>
+                            <h4 class="font-semibold text-brand-900">Impact (Méthode STAR)</h4>
+                            <p class="text-sm text-brand-800 mt-1"><strong>Situation:</strong> Besoin de scalabilité. <strong>Tâche:</strong> Auditer les frictions. <strong>Action:</strong> Automatisation du nurturing LinkedIn via HubSpot. <strong>Résultat:</strong> Création d'une roadmap priorisée boostant l'acquisition B2B.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: IA & PRODUCTIVITE -->
+        <section id="ia" class="scroll-mt-24">
+            <div class="mb-10">
+                <h2 class="text-3xl font-bold text-stone-900 mb-4">2. Révolution IA & Productivité</h2>
+                <p class="text-stone-600 text-lg max-w-3xl">
+                    <strong>Objectif :</strong> Prouver mon expertise en exécution technique et IA générative. Je présente ici les résultats de l'Agent IA conçu pour automatiser la rédaction LinkedIn, démontrant comment je transforme un workflow manuel fastidieux en un processus ultra-efficient.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                <div class="order-2 lg:order-1 bg-white p-6 rounded-2xl shadow-sm border border-stone-200">
+                    <h3 class="text-lg font-bold text-stone-900 mb-4 text-center">Impact de l'Agent IA sur le Workflow</h3>
+                    <!-- Chart Container (Strict CSS enforced via embedded styles) -->
+                    <div class="chart-container">
+                        <canvas id="iaImpactChart"></canvas>
+                    </div>
+                    <p class="text-xs text-center text-stone-400 mt-4">Comparaison : Processus manuel vs. Processus assisté par Agent IA</p>
+                </div>
+                
+                <div class="order-1 lg:order-2 space-y-6">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-stone-200">
+                        <h3 class="text-xl font-bold text-stone-900 mb-3 text-brand-600">Agent IA "Créateur de Contenu"</h3>
+                        <p class="text-stone-600 mb-4">Conception de bout en bout d'un agent IA pour les Directeurs de Magasin (Cas Carrefour/Flatsy), automatisant la valorisation du leadership local.</p>
+                        <ul class="space-y-3">
+                            <li class="flex items-start gap-2">
+                                <span class="text-brand-500 mt-0.5">✔</span>
+                                <span class="text-sm text-stone-700"><strong>STAR - Action :</strong> Création d'un agent de rédaction et de workflows automatisés (via n8n/Stitch).</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-brand-500 mt-0.5">✔</span>
+                                <span class="text-sm text-stone-700"><strong>STAR - Résultat :</strong> Réduction drastique du temps de création et cohérence de marque garantie à 100%.</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <a href="http://localhost:8501/" target="_blank" class="block p-4 bg-stone-900 hover:bg-stone-800 rounded-xl transition group">
+                            <div class="text-xl mb-2">💻</div>
+                            <div class="font-bold text-white text-sm group-hover:text-brand-400 transition">Appli Cursor</div>
+                            <div class="text-xs text-stone-400 mt-1">Développement assisté</div>
+                        </a>
+                        <a href="https://stitch.withgoogle.com/projects/11313065381876347428" target="_blank" class="block p-4 bg-stone-900 hover:bg-stone-800 rounded-xl transition group">
+                            <div class="text-xl mb-2">⚙️</div>
+                            <div class="font-bold text-white text-sm group-hover:text-brand-400 transition">Appli Stitch</div>
+                            <div class="text-xs text-stone-400 mt-1">Workflow IA</div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: SEO & UX -->
+        <section id="ux" class="scroll-mt-24">
+            <div class="mb-10">
+                <h2 class="text-3xl font-bold text-stone-900 mb-4">3. Expertise SEO & UX (Data-Driven)</h2>
+                <p class="text-stone-600 text-lg max-w-3xl">
+                    <strong>Objectif :</strong> Mettre en évidence mon approche analytique. À travers l'audit Clarity de plus de 20 000 sessions, j'identifie les "Quick Wins" UX et structure un maillage sémantique pour optimiser le tunnel de conversion. Interagissez avec le graphique pour voir la répartition des frictions.
+                </p>
+            </div>
+
+            <div class="bg-white p-8 rounded-2xl shadow-sm border border-stone-200">
+                <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
+                    
+                    <div class="lg:col-span-2 space-y-6">
+                        <h3 class="text-xl font-bold text-stone-900 border-b pb-2 border-stone-100">Audit Clarity (T2 2025)</h3>
+                        
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center p-3 bg-stone-50 rounded-lg">
+                                <span class="text-sm font-medium text-stone-600">Sessions Totales</span>
+                                <span class="text-lg font-bold text-stone-900">20 381</span>
+                            </div>
+                            <div class="flex justify-between items-center p-3 bg-stone-50 rounded-lg">
+                                <span class="text-sm font-medium text-stone-600">Taux de Scroll Moyen</span>
+                                <span class="text-lg font-bold text-stone-900">40,21 %</span>
+                            </div>
+                            <div class="flex justify-between items-center p-3 bg-stone-50 rounded-lg">
+                                <span class="text-sm font-medium text-stone-600">Temps d'activité</span>
+                                <span class="text-lg font-bold text-stone-900">38 sec</span>
+                            </div>
+                            <div class="flex justify-between items-center p-3 bg-emerald-50 rounded-lg border border-emerald-100">
+                                <span class="text-sm font-medium text-emerald-800">Rage Clicks (Très faible)</span>
+                                <span class="text-lg font-bold text-emerald-600">0,09 %</span>
+                            </div>
+                        </div>
+
+                        <div class="mt-6 p-4 bg-stone-100 rounded-lg text-sm text-stone-700">
+                            <strong>Diagnostic :</strong> Peu de frictions techniques, mais un besoin d'optimiser le placement des CTA (Call to Action) et de clarifier la proposition de valeur pour augmenter les prises de rendez-vous.
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-3">
+                        <h3 class="text-lg font-bold text-stone-900 mb-4 text-center">Répartition du Trafic par Page Clé</h3>
+                        <!-- Chart Container -->
+                        <div class="chart-container">
+                            <canvas id="seoChart"></canvas>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: PRODUCT-LED -->
+        <section id="product">
+            <div class="mb-10">
+                <h2 class="text-3xl font-bold text-stone-900 mb-4">4. Engagement & Viralité (Product-Led)</h2>
+                <p class="text-stone-600 text-lg max-w-3xl">
+                    Création d'outils interactifs agissant comme des "Lead Magnets" pour diversifier les sources d'acquisition. Résultat : création d'une base de données hautement qualifiée.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Card 1 -->
+                <a href="https://info.flatsy.fr/simulateur-deconomies-en-ligne" target="_blank" class="group block bg-white p-6 rounded-2xl border border-stone-200 shadow-sm hover:border-brand-500 hover:shadow-md transition">
+                    <div class="w-12 h-12 bg-brand-50 rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">
+                        ⏱️
+                    </div>
+                    <h3 class="font-bold text-stone-900 mb-2">Simulateur d'économies</h3>
+                    <p class="text-sm text-stone-600">Outil interactif de calcul de ROI pour prouver la valeur du service en temps réel aux prospects.</p>
+                </a>
+                
+                <!-- Card 2 -->
+                <a href="https://info.flatsy.fr/flatsy-proche-de-chez-vous" target="_blank" class="group block bg-white p-6 rounded-2xl border border-stone-200 shadow-sm hover:border-brand-500 hover:shadow-md transition">
+                    <div class="w-12 h-12 bg-brand-50 rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">
+                        🗺️
+                    </div>
+                    <h3 class="font-bold text-stone-900 mb-2">Carte Interactive France</h3>
+                    <p class="text-sm text-stone-600">Visualisation de la couverture territoriale pour rassurer les clients grands comptes et générer de la confiance.</p>
+                </a>
+
+                <!-- Card 3 -->
+                <a href="https://urlz.fr/mJ53" target="_blank" class="group block bg-white p-6 rounded-2xl border border-stone-200 shadow-sm hover:border-brand-500 hover:shadow-md transition">
+                    <div class="w-12 h-12 bg-brand-50 rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">
+                        🎮
+                    </div>
+                    <h3 class="font-bold text-stone-900 mb-2">Quiz de l'été</h3>
+                    <p class="text-sm text-stone-600">Campagne d'engagement ludique pour réactiver la base de données de manière décalée.</p>
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer / Contact -->
+    <footer id="contact" class="bg-stone-900 text-stone-300 py-16 border-t border-stone-800">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h2 class="text-3xl font-bold text-white mb-4">Prêt à accélérer votre croissance ?</h2>
+                    <p class="text-stone-400 mb-6">Disponible pour échanger sur vos enjeux d'acquisition, l'intégration de l'IA dans vos process, ou la structuration de votre approche Produit.</p>
+                    <a href="https://www.linkedin.com/in/marie-gainche/" target="_blank" class="inline-flex items-center gap-2 bg-brand-600 hover:bg-brand-500 text-white px-6 py-3 rounded-lg font-bold transition">
+                        <span>🔗</span> Contacter sur LinkedIn
+                    </a>
+                </div>
+                
+                <div class="bg-stone-800 p-8 rounded-2xl border border-stone-700">
+                    <h3 class="text-xl font-bold text-white mb-6 border-b border-stone-700 pb-2">Références & Recommandations</h3>
+                    <ul class="space-y-4">
+                        <li>
+                            <a href="https://www.linkedin.com/in/alexis-chauffert-yvart-4a18a416/" target="_blank" class="flex items-center justify-between group">
+                                <div>
+                                    <div class="font-semibold text-stone-200 group-hover:text-brand-400 transition">Alexis Chauffert Yvart</div>
+                                    <div class="text-sm text-stone-500">CEO @ Flatsy</div>
+                                </div>
+                                <span class="text-stone-600 group-hover:text-brand-400">↗</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.linkedin.com/in/agathe-monteil-900534101/" target="_blank" class="flex items-center justify-between group">
+                                <div>
+                                    <div class="font-semibold text-stone-200 group-hover:text-brand-400 transition">Agathe Monteil</div>
+                                    <div class="text-sm text-stone-500">Ex-Flatsy</div>
+                                </div>
+                                <span class="text-stone-600 group-hover:text-brand-400">↗</span>
+                            </a>
+                        </li>
+                        <li class="pt-4 mt-2 border-t border-stone-700">
+                            <a href="https://www.flatsy.fr/blog/ia-productivite-la-nouvelle-routine-de-lagent-immobilier/" target="_blank" class="text-sm text-brand-400 hover:text-brand-300 transition flex items-center gap-2">
+                                <span>📄</span> Lire mon article expert sur l'IA
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- DATA STORAGE ---
+        // Data for Growth Section
+        const growthIdeas = [
+            { id: 1, category: 'acquisition', title: 'Audit Comportemental Clarity', desc: 'Analyse des sessions pour refonte et optimisation du site web.', icon: '📊' },
+            { id: 2, category: 'acquisition', title: 'Extraction & Nurturing LinkedIn', desc: 'Ciblage de groupes spécifiques et séquences automatisées.', icon: '🎯' },
+            { id: 3, category: 'upsell', title: 'Utilisation du canal WhatsApp', desc: 'S\'inspirer du B2B pour les clients gros volume (notifications, relances).', icon: '📱' },
+            { id: 4, category: 'upsell', title: 'Vidéos personnalisées (Gains clients)', desc: 'Estimation dynamique des gains envoyée aux prospects chauds.', icon: '🎥' },
+            { id: 5, category: 'acquisition', title: 'Newsletter LinkedIn', desc: 'Création d\'un rendez-vous régulier pour asseoir l\'expertise.', icon: '📰' },
+            { id: 6, category: 'upsell', title: 'Workflows HubSpot avancés', desc: 'Ajout de libellés en masse et segmentation comportementale.', icon: '⚙️' }
+        ];
+
+        // --- CORE INTERACTION & DOM MANIPULATION ---
+        
+        // 1. Render Growth Ideas
+        function renderGrowthIdeas(filter = 'all') {
+            const container = document.getElementById('growth-list');
+            container.innerHTML = ''; // Clear current
+
+            const filtered = filter === 'all' 
+                ? growthIdeas 
+                : growthIdeas.filter(idea => idea.category === filter);
+
+            filtered.forEach(idea => {
+                const badgeColor = idea.category === 'acquisition' ? 'bg-blue-100 text-blue-800' : 'bg-orange-100 text-orange-800';
+                const badgeText = idea.category === 'acquisition' ? 'Acquisition' : 'Upsell/Nurturing';
+
+                const card = document.createElement('div');
+                card.className = 'p-4 border border-stone-200 rounded-xl bg-white hover:shadow-md transition cursor-default flex gap-4';
+                card.innerHTML = `
+                    <div class="text-2xl mt-1">${idea.icon}</div>
+                    <div>
+                        <div class="flex items-center gap-2 mb-1">
+                            <h4 class="font-bold text-stone-900 text-sm">${idea.title}</h4>
+                            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider ${badgeColor}">${badgeText}</span>
+                        </div>
+                        <p class="text-xs text-stone-600">${idea.desc}</p>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // 2. Handle Filter Buttons
+        function filterGrowth(category) {
+            // Update active styling on buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                if (btn.dataset.filter === category) {
+                    btn.classList.replace('bg-white', 'bg-brand-600');
+                    btn.classList.replace('text-stone-600', 'text-white');
+                    btn.classList.remove('border-stone-300', 'hover:bg-stone-50');
+                } else {
+                    btn.classList.replace('bg-brand-600', 'bg-white');
+                    btn.classList.replace('text-white', 'text-stone-600');
+                    btn.classList.add('border-stone-300', 'hover:bg-stone-50');
+                }
+            });
+            // Re-render list
+            renderGrowthIdeas(category);
+        }
+
+        // --- CHARTS INITIALIZATION (Chart.js) ---
+        
+        // Setup Chart defaults for styling matching Tailwind theme
+        Chart.defaults.font.family = "'Inter', 'system-ui', 'sans-serif'";
+        Chart.defaults.color = '#78716c'; // text-stone-500
+
+        window.addEventListener('DOMContentLoaded', () => {
+            
+            // Initialize Growth List
+            renderGrowthIdeas('all');
+
+            // 1. Chart: IA Impact (Bar Chart comparing Manual vs IA)
+            const ctxIA = document.getElementById('iaImpactChart').getContext('2d');
+            new Chart(ctxIA, {
+                type: 'bar',
+                data: {
+                    labels: ['Temps Rédaction', 'Engagement', 'Cohérence'],
+                    datasets: [
+                        {
+                            label: 'Processus Manuel',
+                            data: [100, 45, 60], // Baseline index 100 for time, percentages for others
+                            backgroundColor: '#e7e5e4', // stone-200
+                            borderRadius: 4
+                        },
+                        {
+                            label: 'Avec Agent IA',
+                            data: [30, 80, 100], // 70% reduction in time, 35% absolute jump in engagement, 100% coherence
+                            backgroundColor: '#0d9488', // brand-600
+                            borderRadius: 4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false, // CRITICAL for filling parent container properly
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) { label += ': '; }
+                                    if(context.label === 'Temps Rédaction') {
+                                        return label + (context.raw === 100 ? 'Base 100 (Lent)' : '-70% (Rapide)');
+                                    }
+                                    return label + context.raw + '%';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: { display: false, beginAtZero: true },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+
+            // 2. Chart: SEO/UX Traffic (Doughnut based on Clarity data)
+            const ctxSEO = document.getElementById('seoChart').getContext('2d');
+            new Chart(ctxSEO, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Homepage', 'Connexion (Pros)', 'Agent de visite', 'Demande Démo'],
+                    datasets: [{
+                        data: [6861, 2813, 2049, 784],
+                        backgroundColor: [
+                            '#14b8a6', // brand-500
+                            '#f59e0b', // accent orange
+                            '#0f766e', // brand-700
+                            '#d6d3d1'  // stone-300
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false, // CRITICAL
+                    cutout: '65%',
+                    plugins: {
+                        legend: { position: 'right' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let value = context.raw;
+                                    let total = 12507; // Sum of these 4
+                                    let percentage = Math.round((value / total) * 100);
+                                    return ` ${value} sessions (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
