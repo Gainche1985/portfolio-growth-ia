@@ -725,7 +725,7 @@
         </div>
         <div>
           <label class="form-label">Propriété HubSpot cible</label>
-          <input type="text" id="hs-prop-name" value="hs-lead-score-icp-claude" placeholder="hs-lead-score-icp-claude" />
+          <input type="text" id="hs-prop-name" value="hs_lead_score_icp_claude" placeholder="hs_lead_score_icp_claude" />
         </div>
         <button class="btn btn-success" onclick="pushHsScore()">
           <span id="push-spinner"></span> Synchroniser
@@ -1248,7 +1248,7 @@ function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
 
 async function pushHsScore() {
   const score = parseInt(document.getElementById('hs-score-input').value);
-  const prop = document.getElementById('hs-prop-name').value.trim() || 'hs-lead-score-icp-claude';
+  const prop = document.getElementById('hs-prop-name').value.trim() || 'hs_lead_score_icp_claude';
   if (!hsContactId) { showHsResult('hs-patch-result', 'error', 'Recherchez d\'abord un contact (étape 2).'); return; }
   if (isNaN(score) || score < 0 || score > 100) { showHsResult('hs-patch-result', 'error', 'Score invalide (0–100).'); return; }
   const spinner = document.getElementById('push-spinner');
