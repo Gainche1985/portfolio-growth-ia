@@ -633,6 +633,37 @@
 ============================= -->
 <div id="panel-hubspot" class="panel">
 
+  <!-- MODE TOGGLE -->
+  <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px;flex-wrap:wrap;">
+    <div style="display:flex;background:var(--bg3);border:1px solid var(--border);border-radius:8px;overflow:hidden;">
+      <button id="btn-demo" onclick="setHsMode('demo')"
+        style="padding:9px 18px;font-size:13px;font-weight:600;border:none;cursor:pointer;background:var(--accent);color:#fff;transition:all 0.2s;">
+        🎭 Mode Démo
+      </button>
+      <button id="btn-webhook" onclick="setHsMode('webhook')"
+        style="padding:9px 18px;font-size:13px;font-weight:600;border:none;cursor:pointer;background:none;color:var(--text3);transition:all 0.2s;">
+        ⚡ Webhook n8n / Make
+      </button>
+    </div>
+    <div id="mode-badge" style="font-size:12px;color:var(--accent2);background:rgba(124,111,255,0.1);border:1px solid rgba(124,111,255,0.25);padding:4px 12px;border-radius:20px;">
+      Mode Démo actif — données simulées réalistes
+    </div>
+  </div>
+
+  <!-- WEBHOOK URL (caché par défaut) -->
+  <div id="webhook-url-card" class="hs-card" style="display:none;margin-bottom:16px;">
+    <div class="hs-title">⚡ URL de votre webhook n8n / Make</div>
+    <div class="hs-desc">
+      Créez un webhook dans n8n/Make qui reçoit <code>{"email", "score", "property"}</code>
+      et appelle l'API HubSpot côté serveur (aucun problème CORS). Collez l'URL ici.
+    </div>
+    <div class="form-group">
+      <label class="form-label">Webhook URL</label>
+      <input type="text" id="hs-webhook-url" placeholder="https://hook.eu1.make.com/xxxx ou https://n8n.xxx/webhook/xxx" />
+      <div class="field-hint">Le webhook reçoit un POST JSON et renvoie <code>{"success": true, "contactId": "..."}</code></div>
+    </div>
+  </div>
+
   <!-- ÉTAPES -->
   <div class="steps">
     <div class="step" id="hs-step-1"><span class="step-num">1</span>Token API</div>
@@ -1070,11 +1101,34 @@ Alex Rocher,alex@startup.io,Startup.io,1-10,Tech,utilisateur,<10K,faible,12-18,e
 
 
 // ============================
-// HUBSPOT API
+// HUBSPOT — MODE + API
 // ============================
 let hsToken = '';
 let hsContactId = '';
 let hsStep = 1;
+let hsMode = 'demo'; // 'demo' | 'webhook'
+let hsDemoEmail = '';
+
+function setHsMode(mode) {
+  hsMode = mode;
+  const isDemo = mode === 'demo';
+  document.getElementById('btn-demo').style.background = isDemo ? 'var(--accent)' : 'none';
+  document.getElementById('btn-demo').style.color = isDemo ? '#fff' : 'var(--text3)';
+  document.getElementById('btn-webhook').style.background = isDemo ? 'none' : 'var(--accent)';
+  document.getElementById('btn-webhook').style.color = isDemo ? 'var(--text3)' : '#fff';
+  document.getElementById('webhook-url-card').style.display = isDemo ? 'none' : 'block';
+  document.getElementById('mode-badge').textContent = isDemo
+    ? '🎭 Mode Démo actif — données simulées réalistes'
+    : '⚡ Mode Webhook — intégration réelle n8n / Make';
+  document.getElementById('mode-badge').style.color = isDemo ? 'var(--accent2)' : 'var(--green)';
+  document.getElementById('mode-badge').style.background = isDemo ? 'rgba(124,111,255,0.1)' : 'rgba(52,211,153,0.08)';
+  document.getElementById('mode-badge').style.borderColor = isDemo ? 'rgba(124,111,255,0.25)' : 'rgba(52,211,153,0.25)';
+  // Reset steps
+  setHsStep(1);
+  document.getElementById('hs-token-result').innerHTML = '';
+  document.getElementById('hs-contact-result').innerHTML = '';
+  document.getElementById('hs-patch-result').innerHTML = '';
+}
 
 function setHsStep(n) {
   hsStep = n;
@@ -1103,22 +1157,28 @@ async function testHsToken() {
   hsToken = token;
   const spinner = document.getElementById('test-spinner');
   spinner.innerHTML = '<span class="spinner"></span>';
-  try {
-    const res = await fetch('https://api.hubapi.com/crm/v3/objects/contacts?limit=1', {
-      headers: { Authorization: 'Bearer ' + hsToken, 'Content-Type': 'application/json' }
-    });
+
+  if (hsMode === 'demo') {
+    await delay(900);
     spinner.innerHTML = '';
-    if (res.ok) {
-      showHsResult('hs-token-result', 'success', '✅ Connexion HubSpot établie avec succès !');
-      setHsStep(2);
-    } else {
-      const err = await res.json();
-      showHsResult('hs-token-result', 'error', `❌ Erreur ${res.status} — ${err.message || 'Token invalide ou scopes insuffisants.'}`);
-    }
-  } catch (e) {
-    spinner.innerHTML = '';
-    showHsResult('hs-token-result', 'error', '❌ Erreur réseau. Vérifiez votre token et vos scopes.');
+    showHsResult('hs-token-result', 'success',
+      '✅ <strong>[Démo]</strong> Connexion simulée — token enregistré, portail HubSpot EU détecté (portalId: 48291057).');
+    setHsStep(2);
+    return;
   }
+
+  // Mode webhook : teste que l'URL est renseignée
+  const webhookUrl = document.getElementById('hs-webhook-url').value.trim();
+  if (!webhookUrl) {
+    spinner.innerHTML = '';
+    showHsResult('hs-token-result', 'error', 'Renseignez d\'abord l\'URL de votre webhook n8n / Make.');
+    return;
+  }
+  await delay(600);
+  spinner.innerHTML = '';
+  showHsResult('hs-token-result', 'success',
+    '✅ Token et webhook enregistrés. Passez à l\'étape 2 pour rechercher un contact.');
+  setHsStep(2);
 }
 
 async function searchHsContact() {
@@ -1127,77 +1187,101 @@ async function searchHsContact() {
   const spinner = document.getElementById('search-spinner');
   spinner.innerHTML = '<span class="spinner"></span>';
   document.getElementById('hs-contact-result').innerHTML = '';
-  try {
-    const res = await fetch('https://api.hubapi.com/crm/v3/objects/contacts/search', {
-      method: 'POST',
-      headers: { Authorization: 'Bearer ' + hsToken, 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        filterGroups: [{ filters: [{ propertyName: 'email', operator: 'EQ', value: email }] }],
-        properties: ['email','firstname','lastname','company','jobtitle','hs_lead_score_icp','lifecyclestage'],
-        limit: 1
-      })
-    });
+  hsDemoEmail = email;
+
+  if (hsMode === 'demo') {
+    await delay(1200);
     spinner.innerHTML = '';
-    if (!res.ok) {
-      const err = await res.json();
-      showHsResult('hs-contact-result', 'error', `❌ Erreur ${res.status} — ${err.message}`);
-      return;
-    }
-    const data = await res.json();
-    if (!data.results?.length) {
-      showHsResult('hs-contact-result', 'warning', '⚠️ Aucun contact trouvé pour cet email dans HubSpot.');
-      return;
-    }
-    const c = data.results[0];
-    hsContactId = c.id;
-    const p = c.properties;
-    const fullName = [p.firstname, p.lastname].filter(Boolean).join(' ') || email;
+    // Contact simulé réaliste
+    const nameParts = email.split('@')[0].split('.');
+    const firstName = cap(nameParts[0] || 'Jean');
+    const lastName = cap(nameParts[1] || 'Dupont');
+    const company = cap(email.split('@')[1]?.split('.')[0] || 'Acme Corp');
+    hsContactId = 'DEMO-' + Math.floor(Math.random()*900000+100000);
     document.getElementById('hs-contact-result').innerHTML = `
       <div class="contact-card">
-        <div class="contact-name">👤 ${fullName}</div>
-        <div style="font-size:12px;color:var(--text2)">${p.jobtitle || ''} ${p.company ? '— ' + p.company : ''}</div>
+        <div style="font-size:11px;color:var(--yellow);margin-bottom:8px;">🎭 Données simulées — mode démo</div>
+        <div class="contact-name">👤 ${firstName} ${lastName}</div>
+        <div style="font-size:12px;color:var(--text2)">Growth Manager — ${company}</div>
         <div class="contact-props">
-          <div class="contact-prop"><span class="prop-key">ID HubSpot : </span><span class="prop-val">${c.id}</span></div>
-          <div class="contact-prop"><span class="prop-key">Email : </span><span class="prop-val">${p.email}</span></div>
-          <div class="contact-prop"><span class="prop-key">Lifecycle stage : </span><span class="prop-val">${p.lifecyclestage || '—'}</span></div>
-          <div class="contact-prop"><span class="prop-key">Score ICP actuel : </span><span class="prop-val" style="color:var(--accent2)">${p.hs_lead_score_icp || 'Non défini'}</span></div>
+          <div class="contact-prop"><span class="prop-key">ID HubSpot : </span><span class="prop-val">${hsContactId}</span></div>
+          <div class="contact-prop"><span class="prop-key">Email : </span><span class="prop-val">${email}</span></div>
+          <div class="contact-prop"><span class="prop-key">Lifecycle stage : </span><span class="prop-val">marketingqualifiedlead</span></div>
+          <div class="contact-prop"><span class="prop-key">Score ICP actuel : </span><span class="prop-val" style="color:var(--accent2)">Non défini</span></div>
         </div>
-      </div>
-    `;
-    // Pré-remplir avec score manuel si calculé
+      </div>`;
+    if (currentScore > 0) document.getElementById('hs-score-input').value = currentScore;
+    setHsStep(3);
+    return;
+  }
+
+  // Mode webhook
+  try {
+    const webhookUrl = document.getElementById('hs-webhook-url').value.trim();
+    const res = await fetch(webhookUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'search', email, token: hsToken })
+    });
+    spinner.innerHTML = '';
+    if (!res.ok) { showHsResult('hs-contact-result', 'error', `❌ Erreur webhook ${res.status}`); return; }
+    const data = await res.json();
+    hsContactId = data.contactId || '';
+    document.getElementById('hs-contact-result').innerHTML = `
+      <div class="contact-card">
+        <div class="contact-name">👤 ${data.name || email}</div>
+        <div class="contact-props">
+          <div class="contact-prop"><span class="prop-key">ID : </span><span class="prop-val">${hsContactId}</span></div>
+          <div class="contact-prop"><span class="prop-key">Score actuel : </span><span class="prop-val" style="color:var(--accent2)">${data.currentScore || 'Non défini'}</span></div>
+        </div>
+      </div>`;
     if (currentScore > 0) document.getElementById('hs-score-input').value = currentScore;
     setHsStep(3);
   } catch(e) {
     spinner.innerHTML = '';
-    showHsResult('hs-contact-result', 'error', '❌ Erreur réseau lors de la recherche.');
+    showHsResult('hs-contact-result', 'error', '❌ Webhook inaccessible. Vérifiez l\'URL et que le webhook est actif.');
   }
 }
 
+function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase(); }
+function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+
 async function pushHsScore() {
   const score = parseInt(document.getElementById('hs-score-input').value);
-  const prop = document.getElementById('hs-prop-name').value.trim() || 'hs_lead_score_icp';
-  if (!hsContactId) { showHsResult('hs-patch-result', 'error', 'Recherchez d\'abord un contact.'); return; }
+  const prop = document.getElementById('hs-prop-name').value.trim() || 'hs-lead-score-icp-claude';
+  if (!hsContactId) { showHsResult('hs-patch-result', 'error', 'Recherchez d\'abord un contact (étape 2).'); return; }
   if (isNaN(score) || score < 0 || score > 100) { showHsResult('hs-patch-result', 'error', 'Score invalide (0–100).'); return; }
   const spinner = document.getElementById('push-spinner');
   spinner.innerHTML = '<span class="spinner"></span>';
+
+  if (hsMode === 'demo') {
+    await delay(1400);
+    spinner.innerHTML = '';
+    const now = new Date().toLocaleString('fr-FR');
+    showHsResult('hs-patch-result', 'success',
+      `✅ <strong>[Démo]</strong> Score ICP <strong>${score}/100</strong> synchronisé — contact <code>${hsContactId}</code> · propriété <code>${prop}</code> · ${now}.<br>
+      <span style="font-size:11.5px;opacity:0.8">En production : ce push s'exécute via webhook n8n/Make → HubSpot API PATCH /crm/v3/objects/contacts/{id}</span>`);
+    return;
+  }
+
+  // Mode webhook
   try {
-    const res = await fetch(`https://api.hubapi.com/crm/v3/objects/contacts/${hsContactId}`, {
-      method: 'PATCH',
-      headers: { Authorization: 'Bearer ' + hsToken, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ properties: { [prop]: score.toString() } })
+    const webhookUrl = document.getElementById('hs-webhook-url').value.trim();
+    const res = await fetch(webhookUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'push', contactId: hsContactId, email: hsDemoEmail, score, property: prop, token: hsToken })
     });
     spinner.innerHTML = '';
     if (res.ok) {
       showHsResult('hs-patch-result', 'success',
-        `✅ Score ICP <strong>${score}/100</strong> synchronisé dans HubSpot (contact #${hsContactId}, propriété <code>${prop}</code>).`);
+        `✅ Score <strong>${score}/100</strong> poussé via webhook → HubSpot (contact #${hsContactId}, propriété <code>${prop}</code>).`);
     } else {
-      const err = await res.json();
-      showHsResult('hs-patch-result', 'error',
-        `❌ Erreur ${res.status} — ${err.message}. Vérifiez que la propriété <code>${prop}</code> existe dans HubSpot (type Nombre).`);
+      showHsResult('hs-patch-result', 'error', `❌ Erreur webhook ${res.status}. Vérifiez votre scénario n8n/Make.`);
     }
   } catch(e) {
     spinner.innerHTML = '';
-    showHsResult('hs-patch-result', 'error', '❌ Erreur réseau lors de la mise à jour.');
+    showHsResult('hs-patch-result', 'error', '❌ Webhook inaccessible lors du push.');
   }
 }
 
