@@ -1097,6 +1097,9 @@ function toggleTokenVisibility() {
   inp.type = inp.type === 'password' ? 'text' : 'password';
 }
 
+const CORS_PROXY = 'https://corsproxy.io/?';
+function hsUrl(url) { return CORS_PROXY + encodeURIComponent(url); }
+
 async function testHsToken() {
   const token = document.getElementById('hs-token').value.trim();
   if (!token) { showHsResult('hs-token-result', 'error', 'Veuillez saisir votre token.'); return; }
@@ -1104,7 +1107,7 @@ async function testHsToken() {
   const spinner = document.getElementById('test-spinner');
   spinner.innerHTML = '<span class="spinner"></span>';
   try {
-    const res = await fetch('https://api.hubapi.com/crm/v3/objects/contacts?limit=1', {
+    const res = await fetch(hsUrl('https://api.hubapi.com/crm/v3/objects/contacts?limit=1'), {
       headers: { Authorization: 'Bearer ' + hsToken, 'Content-Type': 'application/json' }
     });
     spinner.innerHTML = '';
@@ -1128,7 +1131,7 @@ async function searchHsContact() {
   spinner.innerHTML = '<span class="spinner"></span>';
   document.getElementById('hs-contact-result').innerHTML = '';
   try {
-    const res = await fetch('https://api.hubapi.com/crm/v3/objects/contacts/search', {
+    const res = await fetch(hsUrl('https://api.hubapi.com/crm/v3/objects/contacts/search'), {
       method: 'POST',
       headers: { Authorization: 'Bearer ' + hsToken, 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -1181,7 +1184,7 @@ async function pushHsScore() {
   const spinner = document.getElementById('push-spinner');
   spinner.innerHTML = '<span class="spinner"></span>';
   try {
-    const res = await fetch(`https://api.hubapi.com/crm/v3/objects/contacts/${hsContactId}`, {
+    const res = await fetch(hsUrl(`https://api.hubapi.com/crm/v3/objects/contacts/${hsContactId}`), {
       method: 'PATCH',
       headers: { Authorization: 'Bearer ' + hsToken, 'Content-Type': 'application/json' },
       body: JSON.stringify({ properties: { [prop]: score.toString() } })
