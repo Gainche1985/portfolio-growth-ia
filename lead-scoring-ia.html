@@ -636,13 +636,17 @@
   <!-- MODE TOGGLE -->
   <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px;flex-wrap:wrap;">
     <div style="display:flex;background:var(--bg3);border:1px solid var(--border);border-radius:8px;overflow:hidden;">
-      <button id="btn-demo" onclick="setHsMode('demo')"
+      <button id="btn-demo" onclick="setMode('demo')"
         style="padding:9px 18px;font-size:13px;font-weight:600;border:none;cursor:pointer;background:var(--accent);color:#fff;transition:all 0.2s;">
         🎭 Mode Démo
       </button>
-      <button id="btn-webhook" onclick="setHsMode('webhook')"
+      <button id="btn-webhook" onclick="setMode('webhook')"
         style="padding:9px 18px;font-size:13px;font-weight:600;border:none;cursor:pointer;background:none;color:var(--text3);transition:all 0.2s;">
         ⚡ Webhook n8n / Make
+      </button>
+      <button id="btn-webhook-hubspot" onclick="setMode('webhook-hubspot')"
+        style="padding:9px 18px;font-size:13px;font-weight:600;border:none;cursor:pointer;background:none;color:var(--text3);transition:all 0.2s;">
+        ⚡ Webhook HubSpot
       </button>
     </div>
     <div id="mode-badge" style="font-size:12px;color:var(--accent2);background:rgba(124,111,255,0.1);border:1px solid rgba(124,111,255,0.25);padding:4px 12px;border-radius:20px;">
@@ -663,6 +667,9 @@
       <div class="field-hint">Le webhook reçoit un POST JSON et renvoie <code>{"success": true, "contactId": "..."}</code></div>
     </div>
   </div>
+
+  <!-- FLUX CLASSIQUE (Démo / Webhook n8n-Make générique) -->
+  <div id="classic-flow">
 
   <!-- ÉTAPES -->
   <div class="steps">
@@ -742,6 +749,53 @@
         <strong>Contacts → Importer</strong> (colonne <code>hs_lead_score_icp</code> mappée sur la propriété personnalisée).
       </div>
     </div>
+  </div>
+
+  </div><!-- /classic-flow -->
+
+  <!-- ============================
+       SECTION WEBHOOK ⚡ HUBSPOT (Make.com préconfiguré)
+  ============================= -->
+  <div id="section-webhook" class="hs-card" style="display:none;">
+    <div class="hs-title">⚡ Webhook HubSpot — scénario Make déjà configuré</div>
+    <div class="hs-desc">
+      Push direct du score ICP vers HubSpot via votre scénario Make. Le webhook reçoit
+      <code>{"email", "score", "property"}</code>, retrouve le contact par email côté Make
+      et met à jour la propriété personnalisée HubSpot correspondante.
+    </div>
+
+    <div class="alert alert-info">
+      <span class="alert-icon">🔗</span>
+      <div>
+        Webhook Make configuré : <code>https://hook.eu1.make.com/tts9lw1a0471kkypc3p6i7a1mv53at71</code><br>
+        Propriété HubSpot cible : <code>claude_lead_score_icp</code>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Email du contact HubSpot</label>
+      <input type="email" id="webhook-email" placeholder="jean.dupont@acmecorp.com" />
+    </div>
+
+    <div class="form-group">
+      <div style="display:grid; grid-template-columns:120px 1fr auto; gap:10px; align-items:end;">
+        <div>
+          <label class="form-label">Score ICP</label>
+          <input type="text" id="webhook-score-input" placeholder="Ex : 75" />
+          <div class="field-hint">Valeur 0–100</div>
+        </div>
+        <div>
+          <label class="form-label">Propriété HubSpot cible</label>
+          <input type="text" id="webhook-prop-name" value="claude_lead_score_icp" />
+        </div>
+        <button class="btn btn-success" onclick="pushToHubSpot()">
+          <span id="webhook-push-spinner"></span> Envoyer à HubSpot
+        </button>
+      </div>
+      <div class="field-hint">Champ pré-rempli automatiquement avec le score calculé dans l'onglet « Scoring Manuel » si disponible.</div>
+    </div>
+
+    <div id="webhook-status"></div>
   </div>
 
 </div><!-- /panel-hubspot -->
@@ -1106,28 +1160,50 @@ Alex Rocher,alex@startup.io,Startup.io,1-10,Tech,utilisateur,<10K,faible,12-18,e
 let hsToken = '';
 let hsContactId = '';
 let hsStep = 1;
-let hsMode = 'demo'; // 'demo' | 'webhook'
+let hsMode = 'demo'; // 'demo' | 'webhook' | 'webhook-hubspot'
 let hsDemoEmail = '';
 
-function setHsMode(mode) {
+const MAKE_WEBHOOK_URL = 'https://hook.eu1.make.com/tts9lw1a0471kkypc3p6i7a1mv53at71';
+const HS_ICP_PROPERTY = 'claude_lead_score_icp';
+
+const MODE_BUTTONS = { demo: 'btn-demo', webhook: 'btn-webhook', 'webhook-hubspot': 'btn-webhook-hubspot' };
+const MODE_BADGES = {
+  demo: { text: '🎭 Mode Démo actif — données simulées réalistes', color: 'var(--accent2)', bg: 'rgba(124,111,255,0.1)', border: 'rgba(124,111,255,0.25)' },
+  webhook: { text: '⚡ Mode Webhook — intégration réelle n8n / Make', color: 'var(--green)', bg: 'rgba(52,211,153,0.08)', border: 'rgba(52,211,153,0.25)' },
+  'webhook-hubspot': { text: '⚡ Webhook HubSpot — scénario Make préconfiguré', color: 'var(--green)', bg: 'rgba(52,211,153,0.08)', border: 'rgba(52,211,153,0.25)' }
+};
+
+function setMode(mode) {
   hsMode = mode;
-  const isDemo = mode === 'demo';
-  document.getElementById('btn-demo').style.background = isDemo ? 'var(--accent)' : 'none';
-  document.getElementById('btn-demo').style.color = isDemo ? '#fff' : 'var(--text3)';
-  document.getElementById('btn-webhook').style.background = isDemo ? 'none' : 'var(--accent)';
-  document.getElementById('btn-webhook').style.color = isDemo ? 'var(--text3)' : '#fff';
-  document.getElementById('webhook-url-card').style.display = isDemo ? 'none' : 'block';
-  document.getElementById('mode-badge').textContent = isDemo
-    ? '🎭 Mode Démo actif — données simulées réalistes'
-    : '⚡ Mode Webhook — intégration réelle n8n / Make';
-  document.getElementById('mode-badge').style.color = isDemo ? 'var(--accent2)' : 'var(--green)';
-  document.getElementById('mode-badge').style.background = isDemo ? 'rgba(124,111,255,0.1)' : 'rgba(52,211,153,0.08)';
-  document.getElementById('mode-badge').style.borderColor = isDemo ? 'rgba(124,111,255,0.25)' : 'rgba(52,211,153,0.25)';
-  // Reset steps
+
+  Object.entries(MODE_BUTTONS).forEach(([m, id]) => {
+    const btn = document.getElementById(id);
+    const active = m === mode;
+    btn.style.background = active ? 'var(--accent)' : 'none';
+    btn.style.color = active ? '#fff' : 'var(--text3)';
+  });
+
+  const badge = MODE_BADGES[mode];
+  const badgeEl = document.getElementById('mode-badge');
+  badgeEl.textContent = badge.text;
+  badgeEl.style.color = badge.color;
+  badgeEl.style.background = badge.bg;
+  badgeEl.style.borderColor = badge.border;
+
+  document.getElementById('webhook-url-card').style.display = mode === 'webhook' ? 'block' : 'none';
+  document.getElementById('classic-flow').style.display = mode === 'webhook-hubspot' ? 'none' : 'block';
+  document.getElementById('section-webhook').style.display = mode === 'webhook-hubspot' ? 'block' : 'none';
+
+  if (mode === 'webhook-hubspot' && currentScore > 0) {
+    document.getElementById('webhook-score-input').value = currentScore;
+  }
+
+  // Reset steps / résultats du flux classique
   setHsStep(1);
   document.getElementById('hs-token-result').innerHTML = '';
   document.getElementById('hs-contact-result').innerHTML = '';
   document.getElementById('hs-patch-result').innerHTML = '';
+  document.getElementById('webhook-status').innerHTML = '';
 }
 
 function setHsStep(n) {
@@ -1290,6 +1366,50 @@ function showHsResult(elId, type, html) {
   const icons = { success:'✅', error:'❌', warning:'⚠️', info:'💡' };
   document.getElementById(elId).innerHTML =
     `<div class="alert ${map[type]}" style="margin-top:10px;">
+      <span class="alert-icon">${icons[type]}</span><div>${html}</div>
+    </div>`;
+}
+
+// ============================
+// WEBHOOK ⚡ HUBSPOT (Make.com préconfiguré)
+// ============================
+async function pushToHubSpot() {
+  const email = document.getElementById('webhook-email').value.trim();
+  const scoreInput = document.getElementById('webhook-score-input').value.trim();
+  const score = scoreInput !== '' ? parseInt(scoreInput) : currentScore;
+  const property = document.getElementById('webhook-prop-name').value.trim() || HS_ICP_PROPERTY;
+
+  if (!email) { showWebhookStatus('error', 'Veuillez saisir l\'email du contact HubSpot.'); return; }
+  if (isNaN(score) || score < 0 || score > 100) { showWebhookStatus('error', 'Score invalide (0–100).'); return; }
+
+  const spinner = document.getElementById('webhook-push-spinner');
+  spinner.innerHTML = '<span class="spinner"></span>';
+  showWebhookStatus('info', 'Envoi en cours vers le scénario Make...');
+
+  try {
+    const res = await fetch(MAKE_WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, score, property })
+    });
+    spinner.innerHTML = '';
+    if (res.ok) {
+      showWebhookStatus('success',
+        `✅ Score <strong>${score}/100</strong> envoyé à Make pour <strong>${email}</strong> → propriété HubSpot <code>${property}</code>.`);
+    } else {
+      showWebhookStatus('error', `❌ Erreur webhook (${res.status}). Vérifiez le scénario Make.`);
+    }
+  } catch(e) {
+    spinner.innerHTML = '';
+    showWebhookStatus('error', '❌ Webhook Make inaccessible. Vérifiez votre connexion ou l\'URL du scénario.');
+  }
+}
+
+function showWebhookStatus(type, html) {
+  const map = { success:'alert-success', error:'alert-error', warning:'alert-warning', info:'alert-info' };
+  const icons = { success:'✅', error:'❌', warning:'⚠️', info:'💡' };
+  document.getElementById('webhook-status').innerHTML =
+    `<div class="alert ${map[type]}" style="margin-top:14px;">
       <span class="alert-icon">${icons[type]}</span><div>${html}</div>
     </div>`;
 }
