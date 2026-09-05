@@ -68,6 +68,25 @@
         .custom-scrollbar::-webkit-scrollbar-track { background: #f5f5f4; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #d6d3d1; border-radius: 4px; }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #a8a29e; }
+
+        /* Roadmap timeline */
+        .roadmap-item::before {
+            content: '';
+            position: absolute;
+            left: -1px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 10px;
+            height: 10px;
+            background: #14b8a6;
+            border-radius: 50%;
+            border: 2px solid white;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .roadmap-card { animation: fadeInUp 0.4s ease both; }
     </style>
 </head>
 
@@ -94,6 +113,7 @@
                     <a href="#growth" class="hover:text-brand-600 transition">Stratégie Growth</a>
                     <a href="#ia" class="hover:text-brand-600 transition">Projets IA</a>
                     <a href="#ux" class="hover:text-brand-600 transition">Data & UX</a>
+                    <a href="#roadmap" class="hover:text-brand-600 transition font-semibold text-brand-600">📋 Roadmap 2025–26</a>
                 </div>
                 <div>
                     <a href="#contact" class="bg-brand-600 hover:bg-brand-500 text-white px-4 py-2 rounded-lg font-medium transition shadow-sm">
@@ -159,7 +179,7 @@
                 </p>
             </div>
 
-            <div id="roadmap" class="bg-white rounded-2xl shadow-sm border border-stone-200 overflow-hidden scroll-mt-24">
+            <div class="bg-white rounded-2xl shadow-sm border border-stone-200 overflow-hidden">
                 <div class="p-6 md:p-8 bg-stone-100/50 border-b border-stone-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                     <div>
                         <h3 class="text-xl font-bold text-stone-900">Roadmap Growth 2025 (Extrait)</h3>
@@ -341,6 +361,162 @@
                 </a>
             </div>
         </section>
+
+        <!-- =========================================================
+             SECTION 5 : ROADMAP RÉTROSPECTIVE 2025–2026
+             ========================================================= -->
+        <section id="roadmap" class="scroll-mt-24">
+
+            <!-- Hero banner gradient (allégé) -->
+            <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand-600 via-brand-500 to-brand-700 p-8 md:p-12 mb-8">
+                <!-- Decorative circles -->
+                <div class="absolute -top-16 -right-16 w-64 h-64 bg-white/10 rounded-full pointer-events-none"></div>
+                <div class="absolute -bottom-10 -left-10 w-48 h-48 bg-white/10 rounded-full pointer-events-none"></div>
+
+                <div class="relative z-10">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
+                        <div>
+                            <span class="inline-block bg-white/20 text-white text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-3">Oct 2025 → Août 2026</span>
+                            <h2 class="text-3xl md:text-4xl font-extrabold text-white leading-tight">
+                                5. Preuve d'activité —<br>
+                                <span class="text-amber-300">Roadmap rétrospective</span>
+                            </h2>
+                            <p class="text-white/80 mt-3 max-w-xl text-base">
+                                10 mois menés en autonomie totale : certifications, automatisations, études de cas, job search structuré. Chaque projet est documenté et livrable.
+                            </p>
+                        </div>
+                        <a href="https://app.notion.com/p/Roadmap-r-trospective-Oct-2025-Ao-t-2026-3d17c2a5be198012a053c548ae235dc5?source=copy_link"
+                           target="_blank"
+                           class="flex-shrink-0 inline-flex items-center gap-3 bg-white text-brand-700 hover:bg-stone-100 font-bold px-7 py-4 rounded-2xl transition shadow-lg shadow-brand-900/20 text-base">
+                            📋 Voir la roadmap complète
+                            <span class="opacity-70">→</span>
+                        </a>
+                    </div>
+
+                    <!-- 4 KPIs -->
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div class="bg-white/10 border border-white/20 rounded-2xl p-5 text-center">
+                            <div class="text-3xl font-extrabold text-white">19</div>
+                            <div class="text-xs text-white/70 uppercase tracking-wide mt-1 font-medium">Projets réalisés</div>
+                        </div>
+                        <div class="bg-white/10 border border-white/20 rounded-2xl p-5 text-center">
+                            <div class="text-3xl font-extrabold text-white">10</div>
+                            <div class="text-xs text-white/70 uppercase tracking-wide mt-1 font-medium">Mois d'activité</div>
+                        </div>
+                        <div class="bg-white/10 border border-white/20 rounded-2xl p-5 text-center">
+                            <div class="text-3xl font-extrabold text-white">4</div>
+                            <div class="text-xs text-white/70 uppercase tracking-wide mt-1 font-medium">Domaines couverts</div>
+                        </div>
+                        <div class="bg-white/10 border border-white/20 rounded-2xl p-5 text-center">
+                            <div class="text-3xl font-extrabold text-white">100%</div>
+                            <div class="text-xs text-white/70 uppercase tracking-wide mt-1 font-medium">En autonomie</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4 category cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+
+                <div class="roadmap-card bg-white rounded-2xl border border-stone-200 shadow-sm p-6 hover:shadow-md hover:border-brand-300 transition" style="animation-delay:0s">
+                    <div class="w-11 h-11 bg-purple-50 rounded-xl flex items-center justify-center text-2xl mb-4">🎓</div>
+                    <div class="text-xs font-bold uppercase tracking-wider text-purple-600 mb-2">Certifications</div>
+                    <div class="text-2xl font-extrabold text-stone-900 mb-3">4 certifs</div>
+                    <ul class="space-y-1.5 text-sm text-stone-600">
+                        <li class="flex items-start gap-2"><span class="text-purple-400 mt-0.5">▸</span> Agent IA — Lion/Maria School</li>
+                        <li class="flex items-start gap-2"><span class="text-purple-400 mt-0.5">▸</span> HubSpot (CRM, Marketing, Sales)</li>
+                        <li class="flex items-start gap-2"><span class="text-purple-400 mt-0.5">▸</span> English360 Certificate C1</li>
+                        <li class="flex items-start gap-2"><span class="text-purple-400 mt-0.5">▸</span> Google Analytics 4</li>
+                    </ul>
+                </div>
+
+                <div class="roadmap-card bg-white rounded-2xl border border-stone-200 shadow-sm p-6 hover:shadow-md hover:border-brand-300 transition" style="animation-delay:0.1s">
+                    <div class="w-11 h-11 bg-brand-50 rounded-xl flex items-center justify-center text-2xl mb-4">⚙️</div>
+                    <div class="text-xs font-bold uppercase tracking-wider text-brand-600 mb-2">Automatisations & IA</div>
+                    <div class="text-2xl font-extrabold text-stone-900 mb-3">6 projets</div>
+                    <ul class="space-y-1.5 text-sm text-stone-600">
+                        <li class="flex items-start gap-2"><span class="text-brand-400 mt-0.5">▸</span> Pipeline candidature n8n + Gemini</li>
+                        <li class="flex items-start gap-2"><span class="text-brand-400 mt-0.5">▸</span> Dashboard Google Sheets / Apps Script</li>
+                        <li class="flex items-start gap-2"><span class="text-brand-400 mt-0.5">▸</span> Séquence nurturing Consentio</li>
+                        <li class="flex items-start gap-2"><span class="text-brand-400 mt-0.5">▸</span> Workflows Make · Zapier · Lemlist</li>
+                    </ul>
+                </div>
+
+                <div class="roadmap-card bg-white rounded-2xl border border-stone-200 shadow-sm p-6 hover:shadow-md hover:border-brand-300 transition" style="animation-delay:0.2s">
+                    <div class="w-11 h-11 bg-amber-50 rounded-xl flex items-center justify-center text-2xl mb-4">📊</div>
+                    <div class="text-xs font-bold uppercase tracking-wider text-amber-600 mb-2">Growth & Marketing</div>
+                    <div class="text-2xl font-extrabold text-stone-900 mb-3">5 livrables</div>
+                    <ul class="space-y-1.5 text-sm text-stone-600">
+                        <li class="flex items-start gap-2"><span class="text-amber-400 mt-0.5">▸</span> Audit SEO Flatsy (Keyword Strategy)</li>
+                        <li class="flex items-start gap-2"><span class="text-amber-400 mt-0.5">▸</span> Landing pages B2B</li>
+                        <li class="flex items-start gap-2"><span class="text-amber-400 mt-0.5">▸</span> Étude de cas Growth Manager B2C</li>
+                        <li class="flex items-start gap-2"><span class="text-amber-400 mt-0.5">▸</span> Claude Design (dashboard IA)</li>
+                    </ul>
+                </div>
+
+                <div class="roadmap-card bg-white rounded-2xl border border-stone-200 shadow-sm p-6 hover:shadow-md hover:border-brand-300 transition" style="animation-delay:0.3s">
+                    <div class="w-11 h-11 bg-rose-50 rounded-xl flex items-center justify-center text-2xl mb-4">🔍</div>
+                    <div class="text-xs font-bold uppercase tracking-wider text-rose-600 mb-2">Job Search structuré</div>
+                    <div class="text-2xl font-extrabold text-stone-900 mb-3">585 candid.</div>
+                    <ul class="space-y-1.5 text-sm text-stone-600">
+                        <li class="flex items-start gap-2"><span class="text-rose-400 mt-0.5">▸</span> Deck Growth Manager B2B SaaS</li>
+                        <li class="flex items-start gap-2"><span class="text-rose-400 mt-0.5">▸</span> Case study Independance Royale</li>
+                        <li class="flex items-start gap-2"><span class="text-rose-400 mt-0.5">▸</span> Tracking temps réel Google Sheets</li>
+                        <li class="flex items-start gap-2"><span class="text-rose-400 mt-0.5">▸</span> Portfolio interactif (ce site)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Timeline strip -->
+            <div class="bg-white rounded-2xl border border-stone-200 shadow-sm p-6 md:p-8">
+                <h3 class="text-lg font-bold text-stone-900 mb-6">Chronologie des livrables</h3>
+                <div class="relative border-l-2 border-brand-100 pl-6 space-y-5">
+
+                    <div class="roadmap-item relative">
+                        <span class="text-xs font-bold text-stone-400 uppercase tracking-wider">Oct – Nov 2025</span>
+                        <p class="text-sm font-semibold text-stone-800 mt-0.5">Certification Agent IA · Lion/Maria School — Soutenance + Pitch Deck</p>
+                    </div>
+                    <div class="roadmap-item relative">
+                        <span class="text-xs font-bold text-stone-400 uppercase tracking-wider">Nov – Déc 2025</span>
+                        <p class="text-sm font-semibold text-stone-800 mt-0.5">Audit SEO Flatsy · Keyword Strategy Template · Bootcamp 42</p>
+                    </div>
+                    <div class="roadmap-item relative">
+                        <span class="text-xs font-bold text-stone-400 uppercase tracking-wider">Janv 2026</span>
+                        <p class="text-sm font-semibold text-stone-800 mt-0.5">Pipeline candidature automatisé n8n + Gemini · Dashboard suivi 585 candidatures</p>
+                    </div>
+                    <div class="roadmap-item relative">
+                        <span class="text-xs font-bold text-stone-400 uppercase tracking-wider">Fév – Mars 2026</span>
+                        <p class="text-sm font-semibold text-stone-800 mt-0.5">Séquence nurturing Consentio · Automatisations Lemlist / HubSpot · Workflows Make</p>
+                    </div>
+                    <div class="roadmap-item relative">
+                        <span class="text-xs font-bold text-stone-400 uppercase tracking-wider">Avr – Mai 2026</span>
+                        <p class="text-sm font-semibold text-stone-800 mt-0.5">Portfolio interactif GitHub · Claude Design dashboard · Certif. HubSpot · GA4</p>
+                    </div>
+                    <div class="roadmap-item relative">
+                        <span class="text-xs font-bold text-stone-400 uppercase tracking-wider">Juin – Juil 2026</span>
+                        <p class="text-sm font-semibold text-stone-800 mt-0.5">Étude de cas Growth Manager B2C · Deck IR Case Study · English360 Certificate C1</p>
+                    </div>
+                    <div class="roadmap-item relative">
+                        <span class="text-xs font-bold text-stone-400 uppercase tracking-wider">Août 2026</span>
+                        <p class="text-sm font-semibold text-stone-800 mt-0.5">Roadmap Notion consolidée · CV mis à jour · Candidatures actives</p>
+                    </div>
+                </div>
+
+                <!-- Bottom CTA -->
+                <div class="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-stone-100">
+                    <p class="text-sm text-stone-500 max-w-md">
+                        Chaque projet est documenté avec ses livrables, outils utilisés et résultats mesurables. Accès complet sur Notion.
+                    </p>
+                    <a href="https://app.notion.com/p/Roadmap-r-trospective-Oct-2025-Ao-t-2026-3d17c2a5be198012a053c548ae235dc5?source=copy_link"
+                       target="_blank"
+                       class="flex-shrink-0 inline-flex items-center gap-2 bg-stone-900 hover:bg-stone-800 text-white font-semibold px-6 py-3 rounded-xl transition">
+                        📋 Roadmap complète sur Notion →
+                    </a>
+                </div>
+            </div>
+
+        </section>
+        <!-- FIN SECTION 5 -->
 
     </main>
 
