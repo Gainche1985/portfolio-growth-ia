@@ -164,10 +164,13 @@
                     <div>
                         <h3 class="text-xl font-bold text-stone-900">Roadmap Growth 2025 (Extrait)</h3>
                         <p class="text-sm text-stone-500 mt-1">Basé sur l'audit Clarity et les besoins de scalabilité B2B.</p>
+                        <a href="https://app.notion.com/p/Roadmap-r-trospective-Oct-2025-Ao-t-2026-3d17c2a5be198012a053c548ae235dc5" target="_blank" rel="noopener" class="inline-flex items-center gap-2 mt-3 bg-[#3a9ca8] hover:opacity-90 text-white px-4 py-2 rounded-lg text-sm font-semibold transition shadow-sm">
+                            🔗 Voir la Roadmap complète sur Notion →
+                        </a>
                     </div>
                     <!-- Interactive Filters -->
                     <div class="flex space-x-2">
-                        <button onclick="filterGrowth('all')" class="filter-btn active bg-brand-600 text-white px-3 py-1.5 rounded-md text-sm font-medium transition" data-filter="all">Toutes</button>
+                        <button onclick="filterGrowth('all')" class="filter-btn active bg-[#5ecfb8] text-white px-3 py-1.5 rounded-md text-sm font-medium transition" data-filter="all">Toutes</button>
                         <button onclick="filterGrowth('acquisition')" class="filter-btn bg-white border border-stone-300 text-stone-600 hover:bg-stone-50 px-3 py-1.5 rounded-md text-sm font-medium transition" data-filter="acquisition">Acquisition</button>
                         <button onclick="filterGrowth('upsell')" class="filter-btn bg-white border border-stone-300 text-stone-600 hover:bg-stone-50 px-3 py-1.5 rounded-md text-sm font-medium transition" data-filter="upsell">Upsell / Nurturing</button>
                     </div>
@@ -434,11 +437,11 @@
             // Update active styling on buttons
             document.querySelectorAll('.filter-btn').forEach(btn => {
                 if (btn.dataset.filter === category) {
-                    btn.classList.replace('bg-white', 'bg-brand-600');
+                    btn.classList.replace('bg-white', 'bg-[#5ecfb8]');
                     btn.classList.replace('text-stone-600', 'text-white');
                     btn.classList.remove('border-stone-300', 'hover:bg-stone-50');
                 } else {
-                    btn.classList.replace('bg-brand-600', 'bg-white');
+                    btn.classList.replace('bg-[#5ecfb8]', 'bg-white');
                     btn.classList.replace('text-white', 'text-stone-600');
                     btn.classList.add('border-stone-300', 'hover:bg-stone-50');
                 }
