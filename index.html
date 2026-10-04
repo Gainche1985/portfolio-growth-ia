@@ -73,9 +73,9 @@
         .roadmap-item::before {
             content: '';
             position: absolute;
-            left: -1px;
-            top: 50%;
-            transform: translateY(-50%);
+            /* pl-6 (24px) + moitié de la bordure (1px) + rayon du point (5px) : le point se centre sur la ligne verticale, à côté du texte */
+            left: -30px;
+            top: 5px;
             width: 10px;
             height: 10px;
             background: #14b8a6;
