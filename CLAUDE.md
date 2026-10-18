@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this repo is
 
-A static portfolio site for a Growth Marketer (French-language content). It is three self-contained HTML files served as-is (e.g. GitHub Pages): no build step, no package manager, no tests, no linter. Edit the HTML directly. Preview by opening a file in a browser or with `python3 -m http.server` from the repo root.
+A static portfolio site for a Growth Marketer (French-language content). It is three self-contained HTML files served as-is by Netlify (site `portfolio-gemini`, deploy preview on every PR, no `netlify.toml`): no build step, no package manager, no tests, no linter. Edit the HTML directly. Preview by opening a file in a browser or with `python3 -m http.server` from the repo root.
 
 ## Pages
 
