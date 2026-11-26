@@ -114,6 +114,7 @@
                     <a href="#ia" class="hover:text-brand-600 transition">Projets IA</a>
                     <a href="#ux" class="hover:text-brand-600 transition">Data & UX</a>
                     <a href="#consentio" class="hover:text-brand-600 transition">Consentio</a>
+                    <a href="#airtable" class="hover:text-brand-600 transition">Airtable × n8n</a>
                     <a href="#roadmap" class="hover:text-brand-600 transition font-semibold text-brand-600">📋 Roadmap 2025–26</a>
                 </div>
                 <div>
@@ -443,8 +444,101 @@
         </section>
         <!-- FIN SECTION 5 -->
 
+        <!-- SECTION 6 : PONT AIRTABLE → N8N → HUBSPOT -->
+        <section id="airtable" class="scroll-mt-24">
+            <div class="mb-10">
+                <span class="inline-block bg-brand-50 text-brand-700 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-3">Nov 2026 · Projet personnel</span>
+                <h2 class="text-3xl font-bold text-stone-900 mb-4">6. Du lead qualifié au CRM, sans ressaisie : Airtable × n8n × HubSpot</h2>
+                <p class="text-stone-600 text-lg max-w-3xl">
+                    <strong>Contexte :</strong> un pipeline B2B proptech de démonstration (60 leads, 2 tables reliées : Leads et Campagnes). Objectif : qu'un lead qualifié dans Airtable arrive automatiquement dans HubSpot, avec ses informations à jour et sans doublon.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center mb-8">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-stone-100">
+                    <div class="text-2xl font-bold text-brand-600">60</div>
+                    <div class="text-sm text-stone-500 font-medium uppercase tracking-wide mt-1">Leads suivis</div>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-stone-100">
+                    <div class="text-2xl font-bold text-brand-600">43 %</div>
+                    <div class="text-sm text-stone-500 font-medium uppercase tracking-wide mt-1">Taux lead → RDV</div>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-stone-100">
+                    <div class="text-2xl font-bold text-brand-600">3 nœuds</div>
+                    <div class="text-sm text-stone-500 font-medium uppercase tracking-wide mt-1">Workflow n8n</div>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-stone-100">
+                    <div class="text-2xl font-bold text-brand-600">1 min</div>
+                    <div class="text-sm text-stone-500 font-medium uppercase tracking-wide mt-1">Délai max de synchro</div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm">
+                    <div class="w-12 h-12 bg-brand-50 rounded-xl flex items-center justify-center text-2xl mb-4">🗂️</div>
+                    <h3 class="font-bold text-stone-900 mb-2">Base Airtable</h3>
+                    <ul class="space-y-2 text-sm text-stone-600">
+                        <li class="flex items-start gap-2"><span class="text-brand-500 mt-0.5">✔</span> Scoring des leads et note A/B/C</li>
+                        <li class="flex items-start gap-2"><span class="text-brand-500 mt-0.5">✔</span> Automatisation « Score &gt; 70 → Qualifié + email »</li>
+                        <li class="flex items-start gap-2"><span class="text-brand-500 mt-0.5">✔</span> Champ IA « Prochaine action » rédigé à partir des notes</li>
+                        <li class="flex items-start gap-2"><span class="text-brand-500 mt-0.5">✔</span> Tableau de bord : leads, taux lead → RDV, CPL par campagne</li>
+                    </ul>
+                </div>
+                <div class="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm">
+                    <div class="w-12 h-12 bg-brand-50 rounded-xl flex items-center justify-center text-2xl mb-4">⚙️</div>
+                    <h3 class="font-bold text-stone-900 mb-2">Workflow n8n</h3>
+                    <ul class="space-y-2 text-sm text-stone-600">
+                        <li class="flex items-start gap-2"><span class="text-brand-500 mt-0.5">✔</span> Déclencheur Airtable sur le champ « Statut modifié le »</li>
+                        <li class="flex items-start gap-2"><span class="text-brand-500 mt-0.5">✔</span> Filtre : seuls les leads « Qualifié » passent</li>
+                        <li class="flex items-start gap-2"><span class="text-brand-500 mt-0.5">✔</span> HubSpot « Create or Update » : pas de doublon, l'email sert de clé</li>
+                    </ul>
+                </div>
+                <div class="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm">
+                    <div class="w-12 h-12 bg-brand-50 rounded-xl flex items-center justify-center text-2xl mb-4">🔐</div>
+                    <h3 class="font-bold text-stone-900 mb-2">Accès et sécurité</h3>
+                    <ul class="space-y-2 text-sm text-stone-600">
+                        <li class="flex items-start gap-2"><span class="text-brand-500 mt-0.5">✔</span> Token Airtable en lecture seule, limité à une base</li>
+                        <li class="flex items-start gap-2"><span class="text-brand-500 mt-0.5">✔</span> Application privée HubSpot limitée aux contacts</li>
+                        <li class="flex items-start gap-2"><span class="text-brand-500 mt-0.5">✔</span> Test de bout en bout validé avant publication</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <figure class="bg-white p-3 rounded-2xl border border-stone-200 shadow-sm md:col-span-2">
+                    <img src="img/airtable-n8n/n8n-workflow.webp" alt="Workflow n8n en 3 nœuds : déclencheur Airtable, filtre Statut = Qualifié, création ou mise à jour du contact HubSpot" class="w-full rounded-xl" loading="lazy" width="1400" height="542">
+                    <figcaption class="text-xs text-stone-500 mt-2 px-1">Le workflow n8n exécuté avec succès : chaque étape transmet le lead à la suivante.</figcaption>
+                </figure>
+                <figure class="bg-white p-3 rounded-2xl border border-stone-200 shadow-sm">
+                    <img src="img/airtable-n8n/airtable-leads.webp" alt="Table Leads dans Airtable avec la colonne Statut modifié le" class="w-full rounded-xl" loading="lazy" width="1400" height="601">
+                    <figcaption class="text-xs text-stone-500 mt-2 px-1">Airtable : la date de changement de statut sert de signal au workflow.</figcaption>
+                </figure>
+                <figure class="bg-white p-3 rounded-2xl border border-stone-200 shadow-sm">
+                    <img src="img/airtable-n8n/hubspot-contact.webp" alt="Le contact Louis Garcia créé dans HubSpot en phase Lead" class="w-full rounded-xl" loading="lazy" width="706" height="77">
+                    <figcaption class="text-xs text-stone-500 mt-2 px-1">HubSpot : le lead qualifié arrive en phase « Lead », associé à son entreprise.</figcaption>
+                </figure>
+                <figure class="bg-white p-3 rounded-2xl border border-stone-200 shadow-sm md:col-span-2">
+                    <img src="img/airtable-n8n/airtable-dashboard.webp" alt="Tableau de bord Airtable : 60 leads, taux lead vers RDV de 43 %, leads par poste" class="w-full rounded-xl" loading="lazy" width="1400" height="616">
+                    <figcaption class="text-xs text-stone-500 mt-2 px-1">Tableau de bord Airtable : volume de leads, conversion en RDV et répartition par poste.</figcaption>
+                </figure>
+            </div>
+
+            <div class="p-6 bg-brand-50 rounded-2xl border border-brand-100 flex items-start gap-4">
+                <div class="text-2xl">💡</div>
+                <div>
+                    <h4 class="font-semibold text-brand-900">Ce que j'en retiens (Méthode STAR)</h4>
+                    <p class="text-sm text-brand-800 mt-1">
+                        <strong>Situation :</strong> des leads qualifiés dans un outil, une équipe commerciale qui travaille dans un autre. <strong>Tâche :</strong> relier les deux sans ressaisie ni doublon. <strong>Action :</strong> un champ « dernière modification » limité au statut comme signal, un filtre sur « Qualifié », un upsert HubSpot par email, puis des tests pas à pas pour lever trois blocages (identifiants de base, champ vide en mode test, droit d'écriture sur les contacts). <strong>Résultat :</strong> workflow publié, testé de bout en bout, documenté et réutilisable sur une vraie base.
+                    </p>
+                </div>
+            </div>
+
+            <p class="mt-6 text-xs text-stone-500">Stack : Airtable (automatisations, champ IA, interface), n8n, HubSpot</p>
+        </section>
+        <!-- FIN SECTION 6 -->
+
         <!-- =========================================================
-             SECTION 6 : ROADMAP RÉTROSPECTIVE 2025–2026
+             SECTION 7 : ROADMAP RÉTROSPECTIVE 2025–2026
              ========================================================= -->
         <section id="roadmap" class="scroll-mt-24">
 
